@@ -2,3 +2,7 @@
 .vscode/
 # extracted info
 domains/
+# personal login credentials
+*/keys.py
+# python
+__pycache__/
