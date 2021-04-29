@@ -6,3 +6,5 @@ domains/
 */keys.py
 # python
 __pycache__/
+#test files
+test_*.py

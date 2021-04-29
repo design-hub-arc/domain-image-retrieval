@@ -2,7 +2,9 @@ import sys, os
 from urllib.request import urlopen
 from urllib.parse import urlparse
 from bs4 import BeautifulSoup
+from getpass import getpass
 import util
+import canvas
 import arguments
 
 if __name__ == "__main__":
@@ -12,14 +14,21 @@ if __name__ == "__main__":
 
     # check if credentials needed
     if args.login:
-        print("logging in")
+        print("Username: ",end="")
+        username = input()
+        password = getpass()
+        exit()
 
     # get domain
     domain = urlparse(main_url).netloc
-    scheme = urlparse(main_url).scheme
 
     # make soup
     soup = util.make_soup(main_url)
+    
+    # check if valid. If not, quit
+    if not soup:
+        print("Failure to access domain url: {}".format(main_url))
+        exit()
 
     # get href links
     link_tags = soup.find_all("a")

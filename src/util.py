@@ -1,25 +1,23 @@
 import sys
 import os
-import shutil
-from typing import List
-from urllib.request import urlopen
-from urllib.parse import urlparse
+from typing import List, Union
 from urllib.parse import urljoin
 from bs4 import BeautifulSoup
 
-def make_soup(url): 
-    """
-    returns soup representation of webpage
-    """
-    # get HTTPResponse into page
-    page = urlopen(url)
+import requests
 
-    # read
-    html_bytes = page.read()
-    html = html_bytes.decode("utf-8")
 
-    # soup time
-    return BeautifulSoup(html, "html5lib")
+def make_soup(url) -> Union[BeautifulSoup,None]:
+    """
+    returns soup representation of webpage 
+    if response >= 400 returns None
+    """
+    res = requests.get(url)
+    if res.ok:
+        html = res.text
+        return BeautifulSoup(html, "html5lib")
+    else:
+        return None
 
 def make_folder(folder_name, main_folder_path) -> str:
     """
@@ -68,6 +66,8 @@ def get_img_links(domain_urls, main_url) -> List[str]:
     for url in domain_urls:
         soup = make_soup(url)
         # get images
+        if  not soup:
+            continue
         image_tags = soup.find_all("img")
 
         for img in image_tags:
